@@ -64,9 +64,7 @@ function processDepForAutoReplace(
         (isString(dep.currentValue) &&
           lines[lineNumber].includes(dep.currentValue)) ||
         (isString(dep.currentDigest) &&
-          lines[lineNumber].includes(dep.currentDigest)) ||
-        (isString(dep.packageName) &&
-          lines[lineNumber].includes(dep.packageName))
+          lines[lineNumber].includes(dep.currentDigest))
       ) {
         lineNumberRangesToReplace.push(lineNumberRange);
       }
