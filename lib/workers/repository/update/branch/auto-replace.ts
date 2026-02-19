@@ -266,28 +266,14 @@ export async function doAutoReplace(
         );
       }
       if (depName && newName && depName !== newName) {
-        let depNameToReplace = depName;
-        if (
-          upgrade.manager === 'dockerfile' &&
-          isString(upgrade.packageName) &&
-          upgrade.packageName !== depName &&
-          newString.includes(upgrade.packageName)
-        ) {
-          depNameToReplace = upgrade.packageName;
-        }
-        if (!newString.includes(depNameToReplace)) {
+        if (!newString.includes(depName)) {
           logger.debug(
-            {
-              stringToReplace: newString,
-              depName,
-              depNameTemplate,
-              depNameToReplace,
-            },
+            { stringToReplace: newString, depName, depNameTemplate },
             'depName not found in string to replace',
           );
         }
         newString = newString.replace(
-          regEx(escapeRegExp(depNameToReplace), autoReplaceRegExpFlag),
+          regEx(escapeRegExp(depName), autoReplaceRegExpFlag),
           newName,
         );
       }
