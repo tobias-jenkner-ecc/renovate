@@ -59,12 +59,22 @@ function processDepForAutoReplace(
 ): void {
   const lineNumberRangesToReplace: number[][] = [];
   for (const lineNumberRange of lineNumberRanges) {
+    const isArgRange = lines[lineNumberRange[0]]
+      ?.trimStart()
+      .toUpperCase()
+      .startsWith('ARG');
     for (const lineNumber of lineNumberRange) {
       if (
         (isString(dep.currentValue) &&
           lines[lineNumber].includes(dep.currentValue)) ||
         (isString(dep.currentDigest) &&
-          lines[lineNumber].includes(dep.currentDigest))
+          lines[lineNumber].includes(dep.currentDigest)) ||
+        (isArgRange &&
+          isString(dep.packageName) &&
+          lines[lineNumber].includes(dep.packageName)) ||
+        (isArgRange &&
+          isString(dep.depName) &&
+          lines[lineNumber].includes(dep.depName))
       ) {
         lineNumberRangesToReplace.push(lineNumberRange);
       }

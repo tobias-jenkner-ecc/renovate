@@ -698,6 +698,32 @@ describe('workers/repository/update/branch/auto-replace', () => {
       );
     });
 
+    it('updates Dockerfile replacement when FROM image comes from ARG name and tag', async () => {
+      const dockerfile =
+        'ARG BASE_IMAGE_NAME=amd64/python\n' +
+        'ARG BASE_IMAGE_TAG=3.11\n' +
+        'FROM ${BASE_IMAGE_NAME}:${BASE_IMAGE_TAG}\n';
+      upgrade.manager = 'dockerfile';
+      upgrade.depName = 'python';
+      upgrade.packageName = 'amd64/python';
+      upgrade.replaceString =
+        'ARG BASE_IMAGE_NAME=amd64/python\n' +
+        'ARG BASE_IMAGE_TAG=3.11\n' +
+        'FROM ${BASE_IMAGE_NAME}:${BASE_IMAGE_TAG}\n';
+      upgrade.currentValue = '3.11';
+      upgrade.depIndex = 0;
+      upgrade.updateType = 'replacement';
+      upgrade.newName = 'arm64v8/python';
+      upgrade.newValue = '3.12';
+      upgrade.packageFile = 'Dockerfile';
+      const res = await doAutoReplace(upgrade, dockerfile, reuseExistingBranch);
+      expect(res).toBe(
+        'ARG BASE_IMAGE_NAME=arm64v8/python\n' +
+          'ARG BASE_IMAGE_TAG=3.12\n' +
+          'FROM ${BASE_IMAGE_NAME}:${BASE_IMAGE_TAG}\n',
+      );
+    });
+
     it('updates with droneci image replacement', async () => {
       const yml = codeBlock`
         steps:
