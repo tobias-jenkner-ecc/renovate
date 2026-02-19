@@ -704,7 +704,7 @@ describe('workers/repository/update/branch/auto-replace', () => {
         'ARG BASE_IMAGE_TAG=3.11\n' +
         'FROM ${BASE_IMAGE_NAME}:${BASE_IMAGE_TAG}\n';
       upgrade.manager = 'dockerfile';
-      upgrade.depName = 'python';
+      upgrade.depName = 'amd64/python';
       upgrade.packageName = 'amd64/python';
       upgrade.replaceString =
         'ARG BASE_IMAGE_NAME=amd64/python\n' +
