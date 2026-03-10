@@ -5275,6 +5275,49 @@ describe('workers/repository/process/lookup/index', () => {
       ]);
     });
 
+    it('handles replacements - versionLatest', async () => {
+      config.packageName = 'openjdk';
+      config.currentValue = '17.0.0';
+      config.datasource = DockerDatasource.id;
+      config.versioning = dockerVersioningId;
+      // This config is normally set when packageRules are applied
+      config.replacementName = 'eclipse-temurin';
+      config.replacementVersionLatest = true;
+      getDockerReleases.mockResolvedValueOnce({
+        releases: [
+          {
+            version: '17.0.0',
+          },
+          {
+            version: '18.0.0',
+          },
+        ],
+      });
+
+      const { updates } = await Result.wrap(
+        lookup.lookupUpdates(config),
+      ).unwrapOrThrow();
+
+      expect(updates).toEqual([
+        {
+          bucket: 'major',
+          isBreaking: true,
+          newMajor: 18,
+          newMinor: 0,
+          newPatch: 0,
+          newValue: '18.0.0',
+          newVersion: '18.0.0',
+          updateType: 'major',
+        },
+        {
+          updateType: 'replacement',
+          newName: 'eclipse-temurin',
+          newValue: '18.0.0',
+          newVersion: undefined,
+        },
+      ]);
+    });
+
     it('rollback for invalid version to last stable version', async () => {
       config.currentValue = '2.5.17';
       config.packageName = 'vue';

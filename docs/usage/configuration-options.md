@@ -3799,6 +3799,25 @@ For example to replace the npm package `jade` with version `2.0.0` of the packag
 }
 ```
 
+### replacementVersionLatest
+
+Use the `replacementVersionLatest` config option to set the version of a replacement package to the latest available version.
+Must be used with `replacementName`.
+For example to replace the npm package `jade` with latest available version of the package `pug`:
+
+```json
+{
+  "packageRules": [
+    {
+      "matchDatasources": ["npm"],
+      "matchPackageNames": ["jade"],
+      "replacementName": "pug",
+      "replacementVersionLatest": true
+    }
+  ]
+}
+```
+
 ### replacementVersionTemplate
 
 <!-- prettier-ignore -->
